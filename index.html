@@ -133,23 +133,33 @@
           div.innerHTML = `${e.giorno} - <strong>${e.nome}</strong>: ${e.descrizione} <button onclick="deleteEvent('${doc.id}')">❌</button>`;
           timeline.appendChild(div);
         });
-        if (newMessages > 0) { playNotification(); 
-const alertDiv = document.createElement("div");
-alertDiv.textContent = "📬 Nuovo messaggio ricevuto!";
-alertDiv.style.background = "#1a73e8";
-alertDiv.style.color = "#fff";
-alertDiv.style.padding = "0.5em";
-alertDiv.style.marginBottom = "0.5em";
-alertDiv.style.borderRadius = "6px";
-alertDiv.style.textAlign = "center";
-container.prepend(alertDiv);
-setTimeout(() => alertDiv.remove(), 4000);
- }
+        if (newMessages > 0) { playNotification(); mostraNotificaBrowser(m.testo); }
       });
     }
 
     
 let lastMessageTime = null;
+
+function attivaNotifiche() {
+  if (Notification.permission === "granted") {
+    alert("Le notifiche sono già attive!");
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        alert("✅ Notifiche attivate!");
+      } else {
+        alert("🚫 Notifiche bloccate dal browser.");
+      }
+    });
+  }
+}
+
+function mostraNotificaBrowser(testo) {
+  if (Notification.permission === "granted") {
+    new Notification("📩 Nuovo messaggio in App Ufficio", { body: testo });
+  }
+}
+
 
 function playNotification() {
   const audio = new Audio("https://notificationsounds.com/storage/sounds/file-sounds-1151-pristine.mp3");
@@ -178,18 +188,7 @@ function renderMessages() {
           lastMessageTime = m.timestamp;
         }
         });
-        if (newMessages > 0) { playNotification(); 
-const alertDiv = document.createElement("div");
-alertDiv.textContent = "📬 Nuovo messaggio ricevuto!";
-alertDiv.style.background = "#1a73e8";
-alertDiv.style.color = "#fff";
-alertDiv.style.padding = "0.5em";
-alertDiv.style.marginBottom = "0.5em";
-alertDiv.style.borderRadius = "6px";
-alertDiv.style.textAlign = "center";
-container.prepend(alertDiv);
-setTimeout(() => alertDiv.remove(), 4000);
- }
+        if (newMessages > 0) { playNotification(); mostraNotificaBrowser(m.testo); }
       });
     }
 
@@ -299,6 +298,7 @@ setTimeout(() => alertDiv.remove(), 4000);
 </style>
 </head>
 <body>
+  <button onclick="attivaNotifiche()" style='position:fixed;top:1em;right:1em;padding:.5em 1em;background:#1a73e8;color:#fff;border:none;border-radius:6px;'>🔔 Attiva Notifiche</button>
   <h1>App Ufficio</h1>
 
   <section>
