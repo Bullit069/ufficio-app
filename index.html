@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -87,7 +88,8 @@
       db.collection("eventi").get().then(snapshot => {
         const events = {};
         let count = 0;
-        snapshot.forEach(doc => {
+        let newMessages = 0;
+        snapshot.forEach((doc, index) => {
           if (count >= 100) return;
           count++;
           const e = doc.data();
@@ -121,7 +123,8 @@
         const timeline = document.getElementById("timeline");
         timeline.innerHTML = "";
         let count = 0;
-        snapshot.forEach(doc => {
+        let newMessages = 0;
+        snapshot.forEach((doc, index) => {
           if (count >= 100) return;
           count++;
           const e = doc.data();
@@ -130,15 +133,37 @@
           div.innerHTML = `${e.giorno} - <strong>${e.nome}</strong>: ${e.descrizione} <button onclick="deleteEvent('${doc.id}')">❌</button>`;
           timeline.appendChild(div);
         });
+        if (newMessages > 0) { playNotification(); 
+const alertDiv = document.createElement("div");
+alertDiv.textContent = "📬 Nuovo messaggio ricevuto!";
+alertDiv.style.background = "#1a73e8";
+alertDiv.style.color = "#fff";
+alertDiv.style.padding = "0.5em";
+alertDiv.style.marginBottom = "0.5em";
+alertDiv.style.borderRadius = "6px";
+alertDiv.style.textAlign = "center";
+container.prepend(alertDiv);
+setTimeout(() => alertDiv.remove(), 4000);
+ }
       });
     }
 
-    function renderMessages() {
+    
+let lastMessageTime = null;
+
+function playNotification() {
+  const audio = new Audio("https://notificationsounds.com/storage/sounds/file-sounds-1151-pristine.mp3");
+  audio.play();
+}
+
+function renderMessages() {
+
       db.collection("messaggi").orderBy("timestamp", "desc").onSnapshot(snapshot => {
         const container = document.getElementById("msgBoard");
         container.innerHTML = "";
         let count = 0;
-        snapshot.forEach(doc => {
+        let newMessages = 0;
+        snapshot.forEach((doc, index) => {
           if (count >= 100) return;
           count++;
           const m = doc.data();
@@ -146,7 +171,25 @@
           div.className = "msgEntry";
           div.innerHTML = `<strong>${m.nome}:</strong> ${m.testo}`;
           container.appendChild(div);
+        if (index === 0 && lastMessageTime && new Date(m.timestamp) > new Date(lastMessageTime)) {
+          newMessages++;
+        }
+        if (index === 0) {
+          lastMessageTime = m.timestamp;
+        }
         });
+        if (newMessages > 0) { playNotification(); 
+const alertDiv = document.createElement("div");
+alertDiv.textContent = "📬 Nuovo messaggio ricevuto!";
+alertDiv.style.background = "#1a73e8";
+alertDiv.style.color = "#fff";
+alertDiv.style.padding = "0.5em";
+alertDiv.style.marginBottom = "0.5em";
+alertDiv.style.borderRadius = "6px";
+alertDiv.style.textAlign = "center";
+container.prepend(alertDiv);
+setTimeout(() => alertDiv.remove(), 4000);
+ }
       });
     }
 
