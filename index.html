@@ -355,5 +355,34 @@ function renderMessages() {
     <button onclick="sendMessage()">Invia messaggio</button>
     <div id="msgBoard"></div>
   </section>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBaKPm7_MiOtr5o63qWzQg2Up9XPunDMfY",
+    authDomain: "app-ufficio.firebaseapp.com",
+    projectId: "app-ufficio",
+    storageBucket: "app-ufficio.appspot.com",
+    messagingSenderId: "318495267097",
+    appId: "1:318495267097:web:fb1a198e30daa177054d88"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  navigator.serviceWorker.register("firebase-messaging-sw.js")
+    .then((registration) => {
+      messaging.useServiceWorker(registration);
+      messaging.getToken({
+        vapidKey: "BFlfapakkNuekqP-xe1b-JLxIjfW4zuMrB5xrtU6ApSDloOxX9b3rWUNUgwfMQ42avdO-Q1iT9LQG2lMoZUY0a0"
+      }).then((token) => {
+        console.log("✅ TOKEN:", token);
+      }).catch((err) => {
+        console.warn("🚫 Errore nel recupero del token:", err);
+      });
+    });
+</script>
 </body>
+
 </html>
