@@ -278,6 +278,11 @@ function renderMessages() {
       background: #1a73e8;
     }
     #timeline {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
       border-top: 1px solid #ccc;
       padding-top: 1em;
     }
@@ -294,6 +299,19 @@ function renderMessages() {
     .msgEntry {
       padding: .5em 0;
       border-bottom: 1px solid #ddd;
+    }
+
+    @media (max-width: 600px) {
+      #calendarContainer {
+        overflow-x: auto;
+      }
+      #calendar {
+        min-width: 700px;
+      }
+      .day {
+        font-size: 0.75em;
+        padding: 0.3em;
+      }
     }
 </style>
 </head>
