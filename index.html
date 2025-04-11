@@ -332,8 +332,8 @@ function attivaNotifiche() {
 
   navigator.serviceWorker.register("firebase-messaging-sw.js")
     .then((registration) => {
-      messaging.useServiceWorker(registration);
-      messaging.getToken({
+            messaging.getToken({
+        serviceWorkerRegistration: registration,
         vapidKey: "BFlfapakkNuekqP-xe1b-JLxIjfW4zuMrB5xrtU6ApSDloOxX9b3rWUNUgwfMQ42avdO-Q1iT9LQG2lMoZUY0a0"
       }).then((token) => {
         console.log("✅ TOKEN:", token);
