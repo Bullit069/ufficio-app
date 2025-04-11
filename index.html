@@ -331,38 +331,29 @@ function attivaNotifiche() {
 }
 
   navigator.serviceWorker.register("firebase-messaging-sw.js")
-    .then((registration) => {
-            messaging.getToken({
-    vapidKey: "BFlfapakkNuekqP-xe1b-JLxIjfW4zuMrB5xrtU6ApSDloOxX9b3rWUNUgwfMQ42avdO-Q1iT9LQG2lMoZUY0a0",
-    serviceWorkerRegistration: registration
-  }).then((token) => {
-    console.log("✅ TOKEN:", token);
-    const nomeUtente = localStorage.getItem("utente") || prompt("Inserisci il tuo nome:");
-    localStorage.setItem("utente", nomeUtente);
-
-    // Salva il token in Firestore
-    db.collection("token").doc(nomeUtente).set({
-      token: token,
-      nome: nomeUtente,
-      data: new Date().toISOString()
-    }).then(() => {
-      console.log("🎯 Token salvato su Firestore!");
-    }).catch((error) => {
-      console.error("❌ Errore nel salvataggio token:", error);
-    });
-
-  }).catch((err) => {
-    console.warn("🚫 Errore nel recupero del token:", err);
-  });
-
-// Rimosso automatico duplicato
-        serviceWorkerRegistration: registration,
-        vapidKey: "BFlfapakkNuekqP-xe1b-JLxIjfW4zuMrB5xrtU6ApSDloOxX9b3rWUNUgwfMQ42avdO-Q1iT9LQG2lMoZUY0a0"
-      }).then((token) => {
-        console.log("✅ TOKEN:", token);
-      }).catch((err) => {
-        console.warn("🚫 Errore nel recupero del token:", err);
+  .then((registration) => {
+    messaging.getToken({
+      vapidKey: "BFlfapakkNuekqP-xe1b-JLxIjfW4zuMrB5xrtU6ApSDloOxX9b3rWUNUgwfMQ42avdO-Q1iT9LQG2lMoZUY0a0",
+      serviceWorkerRegistration: registration
+    }).then((token) => {
+      console.log("✅ TOKEN:", token);
+      const nomeUtente = localStorage.getItem("utente") || prompt("Inserisci il tuo nome:");
+      localStorage.setItem("utente", nomeUtente);
+      db.collection("token").doc(nomeUtente).set({
+        token: token,
+        nome: nomeUtente,
+        data: new Date().toISOString()
+      }).then(() => {
+        console.log("🎯 Token salvato su Firestore!");
+      }).catch((error) => {
+        console.error("❌ Errore nel salvataggio token:", error);
       });
+    }).catch((err) => {
+      console.warn("🚫 Errore nel recupero del token:", err);
+    });
+  });
+    .then((registration) => {
+            
     });
 </script>
 </body>
