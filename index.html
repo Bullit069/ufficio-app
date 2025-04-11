@@ -330,7 +330,8 @@ function attivaNotifiche() {
   }
 }
 
-  navigator.serviceWorker.register("firebase-messaging-sw.js")
+  
+navigator.serviceWorker.register("firebase-messaging-sw.js")
   .then((registration) => {
     messaging.getToken({
       vapidKey: "BFlfapakkNuekqP-xe1b-JLxIjfW4zuMrB5xrtU6ApSDloOxX9b3rWUNUgwfMQ42avdO-Q1iT9LQG2lMoZUY0a0",
@@ -339,6 +340,8 @@ function attivaNotifiche() {
       console.log("✅ TOKEN:", token);
       const nomeUtente = localStorage.getItem("utente") || prompt("Inserisci il tuo nome:");
       localStorage.setItem("utente", nomeUtente);
+      
+      // Salvataggio token in Firestore
       db.collection("token").doc(nomeUtente).set({
         token: token,
         nome: nomeUtente,
@@ -348,12 +351,12 @@ function attivaNotifiche() {
       }).catch((error) => {
         console.error("❌ Errore nel salvataggio token:", error);
       });
+      
     }).catch((err) => {
       console.warn("🚫 Errore nel recupero del token:", err);
     });
   });
-    .then((registration) => {
-            
+
     });
 </script>
 </body>
