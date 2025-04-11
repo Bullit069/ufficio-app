@@ -342,7 +342,7 @@ navigator.serviceWorker.register("firebase-messaging-sw.js")
       localStorage.setItem("utente", nomeUtente);
       
       // Salvataggio token in Firestore
-      db.collection("token").doc(token).set({
+      db.collection("token").doc(nomeUtente).set({
         token: token,
         nome: nomeUtente,
         data: new Date().toISOString()
@@ -356,8 +356,6 @@ navigator.serviceWorker.register("firebase-messaging-sw.js")
       console.warn("🚫 Errore nel recupero del token:", err);
     });
   });
-
-    });
 </script>
 </body>
 
