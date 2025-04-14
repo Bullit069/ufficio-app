@@ -140,7 +140,7 @@
         container.innerHTML = "";
         let count = 0;
         snapshot.forEach(doc => {
-          if (count >= 100000000) return;
+          if (count >= 100) return;
           count++;
           const m = doc.data();
           const div = document.createElement("div");
