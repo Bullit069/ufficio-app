@@ -357,7 +357,7 @@ navigator.serviceWorker.register("firebase-messaging-sw.js")
     });
   });
 </script>
-<div id="toast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000;"></div>
+
 
     <script>
     function showToast(message) {
@@ -390,6 +390,42 @@ navigator.serviceWorker.register("firebase-messaging-sw.js")
     }
     </script>
     
+
+<script>
+function showBrowserNotification(message) {
+  if (Notification.permission === "granted") {
+    new Notification("📩 Nuovo messaggio", { body: message });
+  }
+}
+
+if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+  Notification.requestPermission();
+}
+
+function renderMessages() {
+  db.collection("messaggi").orderBy("timestamp", "desc").onSnapshot(snapshot => {
+    const container = document.getElementById("msgBoard");
+    container.innerHTML = "";
+    const docs = snapshot.docs.slice(0, 20); // Ultimi 20
+    docs.forEach(doc => { // Mostra dall'alto al basso
+      const m = doc.data();
+      const div = document.createElement("div");
+      div.className = "msgEntry";
+      div.innerHTML = `<strong>${m.nome}:</strong> ${m.testo}`;
+      container.prepend(div); // Inserisce in alto
+    });
+
+    const nuovo = snapshot.docChanges().find(change => change.type === "added");
+    if (nuovo) {
+      const data = nuovo.doc.data();
+      if (data.nome && data.testo) {
+        showBrowserNotification(`${data.nome}: "${data.testo}"`);
+      }
+    }
+  });
+}
+</script>
+
 </body>
 
 </html>
