@@ -51,9 +51,9 @@
       const nome = document.getElementById("eventUser").value;
       const testo = document.getElementById("msgText").value;
       if (!nome || !testo.trim()) return alert("Inserisci nome e messaggio");
-      await db.collection("messaggi").add({
-        nome: nome,
+      await db.collection("messaggi").add({ nome: nome,
         testo: testo,
+        letto: false,
         timestamp: new Date().toISOString()
       });
       document.getElementById("msgText").value = "";
@@ -303,7 +303,21 @@
 
   <section>
     <h2>Messaggi interni</h2>
-    <textarea id="msgText" placeholder="Scrivi un messaggio..."></textarea>
+    
+<div style="position: relative;">
+  <button onclick="toggleEmojiMenu()" style="margin-top: 5px;">😀</button>
+  <div id="emojiMenu" style="display: none; position: absolute; bottom: 35px; left: 0; background: #fff; border: 1px solid #ccc; padding: 5px; z-index: 999;">
+    <span onclick="addEmoji('😀')">😀</span>
+    <span onclick="addEmoji('😂')">😂</span>
+    <span onclick="addEmoji('❤️')">❤️</span>
+    <span onclick="addEmoji('👍')">👍</span>
+    <span onclick="addEmoji('🎉')">🎉</span>
+    <span onclick="addEmoji('🚀')">🚀</span>
+    <span onclick="addEmoji('😎')">😎</span>
+  </div>
+</div>
+
+<textarea id="msgText" placeholder="Scrivi un messaggio..."></textarea>
     <button onclick="sendMessage()">Invia messaggio</button>
     <div id="msgBoard"></div>
   </section>
@@ -422,6 +436,45 @@ function renderMessages() {
         showBrowserNotification(`${data.nome}: "${data.testo}"`);
       }
     }
+  });
+}
+</script>
+
+
+<script>
+function toggleEmojiMenu() {
+  const menu = document.getElementById("emojiMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function addEmoji(emoji) {
+  const input = document.getElementById("msgText");
+  input.value += emoji;
+  document.getElementById("emojiMenu").style.display = "none";
+}
+</script>
+
+
+<script>
+function uploadImage() {
+  const fileInput = document.getElementById("imageInput");
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const storageRef = firebase.storage().ref();
+  const imageRef = storageRef.child('chat_images/' + Date.now() + '_' + file.name);
+  imageRef.put(file).then(snapshot => {
+    snapshot.ref.getDownloadURL().then(url => {
+      const nome = localStorage.getItem("nomeUtente") || "Anonimo";
+      db.collection("messaggi").add({
+        nome: nome,
+        testo: "[Immagine]",
+        timestamp: new Date().toISOString(),
+        imageUrl: url,
+        letto: false
+      });
+      document.getElementById("imageInput").value = "";
+    });
   });
 }
 </script>
