@@ -305,7 +305,20 @@
     <h2>Messaggi interni</h2>
     
 <div style="position: relative;">
-  <button onclick="toggleEmojiMenu()" style="margin-top: 5px;">😀</button>
+  
+<div style="position: relative; display: inline-block;">
+  <button onclick="toggleGifMenu()">GIF</button>
+  <div id="gifMenu" style="display: none; position: absolute; bottom: 35px; left: 55px; background: #fff; border: 1px solid #ccc; padding: 5px; z-index: 999;">
+    <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" onclick="sendGif(this.src)" style="width:80px; cursor:pointer; margin: 2px;">
+    <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" onclick="sendGif(this.src)" style="width:80px; cursor:pointer; margin: 2px;">
+    <img src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif" onclick="sendGif(this.src)" style="width:80px; cursor:pointer; margin: 2px;">
+    <img src="https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif" onclick="sendGif(this.src)" style="width:80px; cursor:pointer; margin: 2px;">
+    <img src="https://media.giphy.com/media/3o6ZsYeY0ljZDbSbdK/giphy.gif" onclick="sendGif(this.src)" style="width:80px; cursor:pointer; margin: 2px;">
+    <img src="https://media.giphy.com/media/f9k1tV7HyORcngKF8v/giphy.gif" onclick="sendGif(this.src)" style="width:80px; cursor:pointer; margin: 2px;">
+  </div>
+</div>
+
+<button onclick="toggleEmojiMenu()" style="margin-top: 5px;">😀</button>
   <div id="emojiMenu" style="display: none; position: absolute; bottom: 35px; left: 0; background: #fff; border: 1px solid #ccc; padding: 5px; z-index: 999;">
     <span onclick="addEmoji('😀')">😀</span>
     <span onclick="addEmoji('😂')">😂</span>
@@ -476,6 +489,26 @@ function uploadImage() {
       document.getElementById("imageInput").value = "";
     });
   });
+}
+</script>
+
+
+<script>
+function toggleGifMenu() {
+  const menu = document.getElementById("gifMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function sendGif(url) {
+  const nome = localStorage.getItem("nomeUtente") || "Anonimo";
+  db.collection("messaggi").add({
+    nome: nome,
+    testo: "[GIF]",
+    timestamp: new Date().toISOString(),
+    imageUrl: url,
+    letto: false
+  });
+  document.getElementById("gifMenu").style.display = "none";
 }
 </script>
 
